@@ -1,0 +1,18 @@
+celsius_degree = degC
+celsium_degree = celsius_degree
+celsiumdegree = celsius_degree
+celsiusdegree = celsius_degree
+
+raman_shift = 1/cm
+ramanshift = raman_shift
+none = 1
+percent = 0.01
+volt_high = V
+volthigh = volt_high
+
+unknown = [unknown]
+reserved = [reserved]
+reserved_sfom = reserved
+reservedsfom = reserved
+reserved_dos = reserved
+reserveddos = reserved
