@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=44", "wheel", "setuptools_scm[toml]>=3.4.3", "kaitaiStructCompile.setuptools[toml]"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools_scm]
+
+[tool.kaitai]
+# packageDir = thisDir / "NTMDTRead"
+#outputDir = "kaitai" # rel to packageDir
+outputDir = "NTMDTRead/kaitai" # rel to localPath
+
+search = true
+inputDir = "scientific/nt_mdt" # rel to localPath
+
+[tool.kaitai.repo]
+git = "https://github.com/KOLANICH/kaitai_struct_formats.git"
+refspec = "mdt"
+update = true
+localPath = "kaitai_struct_formats" # rel to pyproject.toml dir
+
+
+[tool.kaitai.formats]

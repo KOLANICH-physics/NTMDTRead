@@ -1,0 +1,52 @@
+image: registry.gitlab.com/kaitaistructcompile.py/kaitai_struct_python_docker:latest
+
+stages:
+  - build
+  - test
+
+variables:
+  GIT_DEPTH: "1"
+  DOCKER_DRIVER: overlay2
+  SAST_ANALYZER_IMAGE_TAG: latest
+  SAST_DISABLE_DIND: "true"
+  SAST_CONFIDENCE_LEVEL: 5
+  CODECLIMATE_VERSION: latest
+
+include:
+  - template: SAST.gitlab-ci.yml
+  - template: Code-Quality.gitlab-ci.yml
+
+
+build:
+  tags:
+    - shared
+    - linux
+
+  stage: build
+  variables:
+    GIT_DEPTH: "1"
+
+  before_script:
+    - source ./.ci/before.sh
+
+  script:
+    - python3 setup.py bdist_wheel
+    - pip3 install --upgrade ./dist/*.whl
+    - mkdir ./wheels
+    - mv ./dist/*.whl ./wheels/NTMDTRead-0.CI-py3-none-any.whl
+    #- coverage run -a --branch --source=NTMDTRead -m pytest --junitxml=./rspec.xml ./tests/test.py
+    - coverage run -a --branch --source=NTMDTRead ./examples/matplotlibColorMapConvert.py
+    - coverage report || true;
+
+  cache:
+    paths:
+      - /usr/local/site-packages
+      - /usr/local/lib/python*/site-packages
+      - kaitai_struct_formats
+
+  artifacts:
+    paths:
+      - wheels
+      - palletes
+    reports:
+      junit: ./rspec.xml

@@ -1,0 +1,1 @@
+pip3 install --upgrade git+https://github.com/bokeh/colorcet.git git+https://github.com/matplotlib/cmocean.git
