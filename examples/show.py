@@ -3,6 +3,8 @@ import random
 from pathlib import Path
 
 import matplotlib.pyplot as plt
+import scipy as np
+from vispy import app, scene
 
 __author__ = "KOLANICH"
 __license__ = "GPL-3.0+"
@@ -33,9 +35,36 @@ from NTMDTRead.NTMDTReader import NTMDTReader
 testDataDir = baseDir / "test_data"
 
 # you can import pallettes this way:
-#from NTMDTRead.palettes.Rainbows import Rainbow1
-#from NTMDTRead.palettes.Stylish import BasicRed
-#palettes=[Rainbow1, BasicRed]
+from NTMDTRead.palettes.Rainbows import Rainbow1
+from NTMDTRead.palettes.Stylish import BasicRed
+palettes = [Rainbow1, BasicRed]
+
+
+def plot3d(m, bn):
+	for i, fr in enumerate(m.parsed.frames.frames):
+		#fr.main.frame_data.image, cmap=random.choice(palettes), extent=(0, w_mag, 0, h_mag)
+		xs = np.linspace(0, 1, fr.main.frame_data.image.shape[0])
+		ys = np.linspace(0, 1, fr.main.frame_data.image.shape[1])
+
+		canvas = scene.SceneCanvas(keys="interactive", title=bn)
+		view = canvas.central_widget.add_view()
+		view.camera = scene.TurntableCamera(up="z")
+
+		# Simple surface plot example
+		# x, y values are not specified, so assumed to be 0:50
+		p1 = scene.visuals.SurfacePlot(
+			x=xs, y=ys,
+			z=fr.main.frame_data.image
+			#,shading='smooth'
+		)
+		#p1.attach(scene.filters.ZColormapFilter(random.choice(palettes)))
+		#p1.attach(scene.filters.ZColormapFilter("fire"))
+		view.add(p1)
+
+		# Add a 3D axis to keep us oriented
+		axis = scene.visuals.XYZAxis(parent=view.scene)
+		canvas.show()
+		app.run()
 
 
 def processFilesFromTestFolder(mdts, moveBad=None, saveImages=None):
